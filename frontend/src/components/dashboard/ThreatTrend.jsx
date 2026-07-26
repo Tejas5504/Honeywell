@@ -11,7 +11,9 @@ import {
 import { CHART_TOOLTIP_STYLE } from '../../utils/constants';
 
 const ThreatTrend = ({ data = [] }) => {
-  if (!data || data.length === 0) {
+  const safeData = Array.isArray(data) ? data : [];
+
+  if (safeData.length === 0) {
     return (
       <div className="w-full h-72 flex items-center justify-center text-gray-500">
         No trend data available. Generate data and run predictions first.
@@ -23,7 +25,7 @@ const ThreatTrend = ({ data = [] }) => {
     <div className="w-full h-72">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          data={data}
+          data={safeData}
           margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
         >
           <defs>
@@ -52,7 +54,7 @@ const ThreatTrend = ({ data = [] }) => {
             tickLine={false}
             axisLine={false}
             dy={10}
-            tickFormatter={(v) => v?.slice(5) || v}
+            tickFormatter={(v) => v?.slice?.(5) || v}
           />
           <YAxis 
             stroke="#4b5563" 

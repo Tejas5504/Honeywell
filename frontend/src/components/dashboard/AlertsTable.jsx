@@ -6,6 +6,7 @@ import { ATTACK_TYPES } from '../../utils/constants';
 
 const AlertsTable = ({ alerts = [], isLoading }) => {
   const navigate = useNavigate();
+  const safeAlerts = Array.isArray(alerts) ? alerts : [];
 
   if (isLoading) {
     return (
@@ -20,7 +21,7 @@ const AlertsTable = ({ alerts = [], isLoading }) => {
     );
   }
 
-  if (!alerts || !alerts.length) {
+  if (safeAlerts.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
         No alerts found. Generate data and run predictions first.
@@ -56,8 +57,7 @@ const AlertsTable = ({ alerts = [], isLoading }) => {
           </tr>
         </thead>
         <tbody className="divide-y divide-glass-border">
-          {alerts.map((alert) => {
-            // Normalize field names — backend uses snake_case, some callers use camelCase
+          {safeAlerts.map((alert) => {
             const id = alert.id || alert._id;
             const entityName = alert.entityName || alert.entity_id || 'Unknown';
             const entityType = alert.entityType || alert.entity_type || '';
@@ -71,7 +71,7 @@ const AlertsTable = ({ alerts = [], isLoading }) => {
 
             return (
               <tr
-                key={id}
+                key={id || Math.random()}
                 onClick={() => navigate(`/alerts/${id}`)}
                 className="bg-navy-950 table-row-hover group cursor-pointer"
               >

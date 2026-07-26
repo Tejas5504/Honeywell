@@ -12,7 +12,9 @@ import {
 import { CHART_TOOLTIP_STYLE } from '../../utils/constants';
 
 const RiskDistribution = ({ data = [] }) => {
-  if (!data || data.length === 0) {
+  const safeData = Array.isArray(data) ? data : [];
+
+  if (safeData.length === 0) {
     return (
       <div className="w-full h-64 flex items-center justify-center text-gray-500">
         No risk data available.
@@ -20,7 +22,7 @@ const RiskDistribution = ({ data = [] }) => {
     );
   }
   // Color mapping based on risk score range
-  const getColor = (range) => {
+  const getColor = (range = '') => {
     if (range.includes('0-25')) return '#10b981'; // success
     if (range.includes('26-50')) return '#f59e0b'; // warning
     if (range.includes('51-75')) return '#f97316'; // orange
@@ -43,7 +45,7 @@ const RiskDistribution = ({ data = [] }) => {
     <div className="w-full h-64">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={data}
+          data={safeData}
           margin={{ top: 20, right: 10, left: -20, bottom: 0 }}
         >
           <CartesianGrid strokeDasharray="3 3" stroke="#1c2541" vertical={false} />
@@ -71,8 +73,8 @@ const RiskDistribution = ({ data = [] }) => {
             radius={[4, 4, 0, 0]}
             maxBarSize={50}
           >
-            {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={getColor(entry.range)} />
+            {safeData.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getColor(entry.range || '')} />
             ))}
           </Bar>
         </BarChart>
