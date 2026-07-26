@@ -45,12 +45,20 @@ class Settings(BaseSettings):
 
     @property
     def mongo_connection_string(self) -> str:
-        """Returns the active MongoDB connection string (prefers MONGODB_URL)."""
+        """Returns the active MongoDB connection string (prefers MONGODB_URL). Auto-corrects missing scheme."""
+        raw_url = ""
         if self.MONGODB_URL and self.MONGODB_URL != "mongodb://localhost:27017":
-            return self.MONGODB_URL
-        if self.MONGODB_URI:
-            return self.MONGODB_URI
-        return self.MONGODB_URL
+            raw_url = self.MONGODB_URL.strip()
+        elif self.MONGODB_URI:
+            raw_url = self.MONGODB_URI.strip()
+        else:
+            raw_url = self.MONGODB_URL.strip()
+
+        if raw_url and not (raw_url.startswith("mongodb://") or raw_url.startswith("mongodb+srv://")):
+            # Auto-fix missing protocol prefix
+            raw_url = f"mongodb+srv://{raw_url}"
+
+        return raw_url
 
 
 # Singleton settings instance

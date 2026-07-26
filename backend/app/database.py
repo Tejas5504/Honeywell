@@ -13,22 +13,29 @@ class DatabaseManager:
     db: AsyncIOMotorDatabase = None
     
     async def connect(self):
-        """Initialize Motor client and database reference."""
+        """Initialize Motor client and database reference safely."""
         mongo_uri = settings.mongo_connection_string
-        self.client = AsyncIOMotorClient(
-            mongo_uri,
-            maxPoolSize=50,
-            minPoolSize=10,
-            serverSelectionTimeoutMS=10000,
-        )
-        self.db = self.client[settings.MONGODB_DB_NAME]
-        
-        # Create indexes for optimal query performance
-        await self._create_indexes()
-        print(f"[OK] Connected to MongoDB: {settings.MONGODB_DB_NAME}")
+        try:
+            print(f"[INFO] Connecting to MongoDB...")
+            self.client = AsyncIOMotorClient(
+                mongo_uri,
+                maxPoolSize=50,
+                minPoolSize=10,
+                serverSelectionTimeoutMS=5000,
+            )
+            self.db = self.client[settings.MONGODB_DB_NAME]
+            
+            # Create indexes for optimal query performance
+            await self._create_indexes()
+            print(f"[OK] Connected to MongoDB: {settings.MONGODB_DB_NAME}")
+        except Exception as err:
+            print(f"[WARNING] MongoDB connection failed: {err}")
+            print("[INFO] Server will continue running, but DB operations will fail until valid MONGODB_URL is provided.")
     
     async def _create_indexes(self):
         """Create database indexes for performance."""
+        if self.db is None:
+            return
         # Access logs indexes
         await self.db.access_logs.create_index([("entity_id", 1), ("timestamp", -1)])
         await self.db.access_logs.create_index([("timestamp", -1)])
@@ -56,6 +63,8 @@ class DatabaseManager:
     
     def get_collection(self, name: str):
         """Get a specific collection reference."""
+        if self.db is None:
+            raise RuntimeError("Database connection not established. Check MONGODB_URL environment variable.")
         return self.db[name]
 
 
