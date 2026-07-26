@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: cybershield-backend
+    runtime: python
+    rootDir: backend
+    pythonVersion: "3.11.9"
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: MONGODB_DB_NAME
+        value: cybershield
+      - key: CORS_ALLOW_ALL
+        value: "True"
+      - key: DEBUG
+        value: "False"
+      - key: MONGODB_URL
+        sync: false   # You will set this manually in Render dashboard
+    plan: free
+    healthCheckPath: /health

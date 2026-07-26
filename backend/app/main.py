@@ -60,9 +60,15 @@ app.include_router(copilot.router)
 
 @app.get("/")
 async def root():
-    """Health check endpoint."""
+    """Root endpoint."""
     return {
         "status": "running",
         "app": settings.APP_NAME,
         "version": settings.APP_VERSION,
     }
+
+
+@app.get("/health")
+async def health_check():
+    """Render health check endpoint."""
+    return {"status": "healthy", "version": settings.APP_VERSION}
