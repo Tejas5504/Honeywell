@@ -14,11 +14,12 @@ class DatabaseManager:
     
     async def connect(self):
         """Initialize Motor client and database reference."""
+        mongo_uri = settings.mongo_connection_string
         self.client = AsyncIOMotorClient(
-            settings.MONGODB_URI,
+            mongo_uri,
             maxPoolSize=50,
             minPoolSize=10,
-            serverSelectionTimeoutMS=5000,
+            serverSelectionTimeoutMS=10000,
         )
         self.db = self.client[settings.MONGODB_DB_NAME]
         

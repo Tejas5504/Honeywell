@@ -27,11 +27,11 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS middleware for React dev server
+# CORS middleware — allow all origins on Render for Vercel frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
-    allow_credentials=True,
+    allow_origins=["*"] if settings.CORS_ALLOW_ALL else settings.CORS_ORIGINS,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
