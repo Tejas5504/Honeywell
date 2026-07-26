@@ -33,10 +33,10 @@ The platform combines machine learning, interactive dashboards, MITRE ATT&CK map
 ![Dashboard](Photos/Dashboard.png)
 
 ### Alerts
-![Alter](Photos/Alter.png)
+![Alert](Photos/Alert.png)
 
 ### Data Generator
-![v](Photos/data.png) 
+![Data Generator](Photos/Data.png) 
 
 ### Model
 ![Model](Photos/Model.png)
