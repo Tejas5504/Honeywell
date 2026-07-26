@@ -362,7 +362,7 @@ http://localhost:5173
 
 # 👨‍💻 Author
 
-**Tejas Kiran Deshmukh**
+**Tejas Ashok Desale**
 
 B.Tech Information Technology
 
