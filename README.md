@@ -8,36 +8,36 @@
 
 ```mermaid
 graph TD
-    A[Synthetic Data Generator / SIEM Log Ingestion] -->|Time-Series Access Logs| B[(MongoDB Database: cybershield)]
-    
-    subgraph 3-Stage Hybrid AI Ensemble Engine
-        B --> C[11-Dimensional Behavioral Feature Extractor]
-        
-        subgraph Stage 1: Tabular Anomaly Detection
-            C --> D[Isolation Forest Ensemble]
-            D -->|Point-in-Time Anomaly Score| G[Hybrid Ensemble Fusion Engine]
+    A["Synthetic Data Generator / SIEM Log Ingestion"] -->|Time-Series Access Logs| B[("MongoDB Database: cybershield")]
+
+    subgraph ENGINE["3-Stage Hybrid AI Ensemble Engine"]
+        B --> C["11-Dimensional Behavioral Feature Extractor"]
+
+        subgraph STAGE1["Stage 1: Tabular Anomaly Detection"]
+            C --> D["Isolation Forest Ensemble"]
+            D -->|Point-in-Time Anomaly Score| G["Hybrid Ensemble Fusion Engine"]
         end
 
-        subgraph Stage 2: Temporal Sequence Modeling
-            C --> E[GRU Recurrent Neural Model L=5]
+        subgraph STAGE2["Stage 2: Temporal Sequence Modeling"]
+            C --> E["GRU Recurrent Neural Model (L=5)"]
             E -->|Sequence Reconstruction Loss| G
         end
 
-        subgraph Stage 3: Attack Taxonomy Classifier
-            C --> F[RandomForest Attack Classifier]
-            F -->|Exact MITRE Attack Category| H[Contextual Risk Scorer & XAI Engine]
+        subgraph STAGE3["Stage 3: Attack Taxonomy Classifier"]
+            C --> F["Random Forest Attack Classifier"]
+            F -->|Exact MITRE Attack Category| H["Contextual Risk Scorer & XAI Engine"]
         end
 
         G -->|Fused Anomaly Flag| H
     end
 
-    subgraph SOC Security Operations Center Dashboard
-        H --> I[React.js Dark Navy Glassmorphism UI]
-        I --> J[SOAR Automated Response Playbooks]
-        I --> K[CyberShield AI Copilot Assistant]
-        I --> L[MITRE ATT&CK Threat Matrix]
-        I --> M[Real-Time Live Event Stream Ticker]
-        I --> N[PDF Executive Security Reports]
+    subgraph SOC["SOC Security Operations Center Dashboard"]
+        H --> I["React.js Dark Navy Glassmorphism UI"]
+        I --> J["SOAR Automated Response Playbooks"]
+        I --> K["CyberShield AI Copilot Assistant"]
+        I --> L["MITRE ATT&CK Threat Matrix"]
+        I --> M["Real-Time Live Event Stream Ticker"]
+        I --> N["PDF Executive Security Reports"]
     end
 ```
 
@@ -227,5 +227,6 @@ Honeywell/
 ## 📜 License & Compliance
 
 Built for enterprise cybersecurity threat detection and hackathon demonstration compliance. MIT License.
-#   H o n e y w e l l  
+#   H o n e y w e l l 
+ 
  
