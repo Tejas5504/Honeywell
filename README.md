@@ -29,14 +29,24 @@ The platform combines machine learning, interactive dashboards, MITRE ATT&CK map
 ---
 ## Project Screenshots
 
-### Login Page
-![Login Page](screenshots/login.png)
+### DashBoard Page
+![Dashboard](Photos/Dashboard.png)
 
-### Dashboard
-![Dashboard](screenshots/dashboard.png)
+### Alerts
+![Alter](Photos/Alter.png)
 
-### Analytics
-![Analytics](screenshots/analytics.png) 
+### Data Generator
+![v](Photos/data.png) 
+
+### Model
+![Model](Photos/Model.png)
+
+### Reports
+![Reports](Photos/Reports.png) 
+
+### ChatBot
+![ChatBot](Photos/ChatBot.png)
+
 
 ---
 
