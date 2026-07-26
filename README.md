@@ -27,6 +27,18 @@ The platform combines machine learning, interactive dashboards, MITRE ATT&CK map
 - 📈 Explainable AI (XAI) for threat reasoning
 
 ---
+## Project Screenshots
+
+### Login Page
+![Login Page](screenshots/login.png)
+
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
+
+### Analytics
+![Analytics](screenshots/analytics.png) 
+
+---
 
 # 🧠 AI Pipeline
 
