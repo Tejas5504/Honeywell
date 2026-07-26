@@ -2,7 +2,7 @@
  * DashboardPage - Main security overview dashboard.
  * Fetches real data from the backend API and displays
  * stat cards, charts, heatmap, world map, MITRE matrix, live event stream, and alerts table.
- * Auto-refreshes every 30 seconds.
+ * Auto-refreshes every 30 seconds. Crash-proof array parsing.
  */
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
@@ -57,31 +57,55 @@ const DashboardPage = () => {
         alertsAPI.getAlerts({ page: 1, page_size: 10, min_risk: 50, distinct_entities: true }),
       ]);
 
-      if (statsRes.status === 'fulfilled') setStats(statsRes.value);
-      if (trendRes.status === 'fulfilled') setTrendData(trendRes.value || []);
-      if (pieRes.status === 'fulfilled') setPieData(
-        (pieRes.value || []).map(d => ({
-          name: d.name || d.attack_type,
-          value: d.value ?? d.count ?? 0,
-          key: d.attack_type || d.name
-        }))
-      );
-      if (riskRes.status === 'fulfilled') setRiskData(
-        (riskRes.value || []).map(d => ({
-          range: d.range || d.bucket,
-          count: d.count ?? 0
-        }))
-      );
-      if (heatmapRes.status === 'fulfilled') setHeatmapData(heatmapRes.value || []);
-      if (mapRes.status === 'fulfilled') setMapData(
-        (mapRes.value || []).map(d => ({
-          id: d.country,
-          country: d.country,
-          coordinates: [d.lon, d.lat],
-          count: d.count,
-        }))
-      );
-      if (alertsRes.status === 'fulfilled') setAlerts(alertsRes.value?.alerts || []);
+      if (statsRes.status === 'fulfilled' && statsRes.value && typeof statsRes.value === 'object') {
+        setStats(statsRes.value);
+      }
+
+      if (trendRes.status === 'fulfilled') {
+        setTrendData(Array.isArray(trendRes.value) ? trendRes.value : []);
+      }
+
+      if (pieRes.status === 'fulfilled') {
+        const rawPie = Array.isArray(pieRes.value) ? pieRes.value : [];
+        setPieData(
+          rawPie.map(d => ({
+            name: d.name || d.attack_type || 'Unknown',
+            value: d.value ?? d.count ?? 0,
+            key: d.attack_type || d.name || 'Unknown'
+          }))
+        );
+      }
+
+      if (riskRes.status === 'fulfilled') {
+        const rawRisk = Array.isArray(riskRes.value) ? riskRes.value : [];
+        setRiskData(
+          rawRisk.map(d => ({
+            range: d.range || d.bucket || '0',
+            count: d.count ?? 0
+          }))
+        );
+      }
+
+      if (heatmapRes.status === 'fulfilled') {
+        setHeatmapData(Array.isArray(heatmapRes.value) ? heatmapRes.value : []);
+      }
+
+      if (mapRes.status === 'fulfilled') {
+        const rawMap = Array.isArray(mapRes.value) ? mapRes.value : [];
+        setMapData(
+          rawMap.map(d => ({
+            id: d.country || 'Unknown',
+            country: d.country || 'Unknown',
+            coordinates: [d.lon || 0, d.lat || 0],
+            count: d.count || 0,
+          }))
+        );
+      }
+
+      if (alertsRes.status === 'fulfilled') {
+        const rawAlerts = alertsRes.value?.alerts;
+        setAlerts(Array.isArray(rawAlerts) ? rawAlerts : []);
+      }
     } catch (err) {
       console.error('Failed to load dashboard data:', err);
     } finally {
@@ -97,11 +121,13 @@ const DashboardPage = () => {
 
   const isLoading = loading && !stats;
 
-  // Compute Attack Breakdown for MITRE matrix
-  const attackBreakdown = pieData.reduce((acc, curr) => {
-    acc[curr.key || curr.name] = curr.value;
+  // Compute Attack Breakdown for MITRE matrix safely
+  const attackBreakdown = Array.isArray(pieData) ? pieData.reduce((acc, curr) => {
+    if (curr && (curr.key || curr.name)) {
+      acc[curr.key || curr.name] = curr.value || 0;
+    }
     return acc;
-  }, {});
+  }, {}) : {};
 
   return (
     <div className="space-y-6">

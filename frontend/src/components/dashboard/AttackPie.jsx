@@ -26,14 +26,16 @@ const renderLegendText = (value) => {
 };
 
 const AttackPie = ({ data = [] }) => {
-  if (!data || data.length === 0) {
+  const safeData = Array.isArray(data) ? data : [];
+
+  if (safeData.length === 0) {
     return (
       <div className="w-full h-72 flex items-center justify-center text-gray-500">
         No attack data available.
       </div>
     );
   }
-  const total = data.reduce((acc, curr) => acc + (curr.value || 0), 0);
+  const total = safeData.reduce((acc, curr) => acc + (curr.value || 0), 0);
 
   return (
     <div className="w-full h-72 relative">
@@ -45,7 +47,7 @@ const AttackPie = ({ data = [] }) => {
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
-            data={data}
+            data={safeData}
             cx="50%"
             cy="45%"
             innerRadius={65}
@@ -54,7 +56,7 @@ const AttackPie = ({ data = [] }) => {
             dataKey="value"
             stroke="none"
           >
-            {data.map((entry, index) => (
+            {safeData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={CHART_PALETTE[index % CHART_PALETTE.length]} />
             ))}
           </Pie>

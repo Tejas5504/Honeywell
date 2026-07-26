@@ -17,7 +17,8 @@ const WorldMap = ({ data = [] }) => {
     setMounted(true);
   }, []);
 
-  const maxLogins = data.length > 0 ? Math.max(...data.map(d => d.count), 1) : 1;
+  const safeData = Array.isArray(data) ? data : [];
+  const maxLogins = safeData.length > 0 ? Math.max(...safeData.map(d => d?.count || 0), 1) : 1;
 
   const getMarkerSize = (count) => {
     const minSize = 3;
@@ -37,7 +38,7 @@ const WorldMap = ({ data = [] }) => {
       <ComposableMap projectionConfig={{ scale: 140 }} className="w-full h-full">
         <Geographies geography={geoUrl}>
           {({ geographies }) =>
-            geographies.map((geo) => (
+            (geographies || []).map((geo) => (
               <Geography
                 key={geo.rsmKey}
                 geography={geo}
@@ -54,10 +55,10 @@ const WorldMap = ({ data = [] }) => {
           }
         </Geographies>
         
-        {mounted && data.map(({ id, country, coordinates, count }) => (
+        {mounted && safeData.map(({ id, country, coordinates, count }) => (
           <Marker 
-            key={id || country} 
-            coordinates={coordinates}
+            key={id || country || Math.random()} 
+            coordinates={Array.isArray(coordinates) && coordinates.length === 2 ? coordinates : [0, 0]}
             onMouseEnter={() => setTooltip({ country, count })}
             onMouseLeave={() => setTooltip(null)}
           >
@@ -65,18 +66,18 @@ const WorldMap = ({ data = [] }) => {
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.8 }}
               transition={{ type: "spring", stiffness: 100, damping: 10 }}
-              r={getMarkerSize(count)}
-              fill={getMarkerColor(count)}
+              r={getMarkerSize(count || 0)}
+              fill={getMarkerColor(count || 0)}
               stroke="#050816"
               strokeWidth={1}
               className="cursor-pointer"
             />
             {/* Pulse effect for high counts */}
-            {count / maxLogins > 0.8 && (
+            {(count || 0) / maxLogins > 0.8 && (
               <circle
-                r={getMarkerSize(count)}
+                r={getMarkerSize(count || 0)}
                 fill="none"
-                stroke={getMarkerColor(count)}
+                stroke={getMarkerColor(count || 0)}
                 strokeWidth={2}
                 className="animate-ping opacity-75 origin-center"
               />
