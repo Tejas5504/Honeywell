@@ -1,5 +1,3 @@
-he ghe readme file 
-
 # 🛡️ CyberShield: AI-Powered Behavioral Anomaly Detection Platform
 
 > An AI-powered Security Monitoring Platform that detects abnormal user behaviour, identifies cyber threats using machine learning, explains security risks with Explainable AI (XAI), and assists analysts with intelligent incident response recommendations.
